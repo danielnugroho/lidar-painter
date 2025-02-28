@@ -248,7 +248,9 @@ class PointCloudColorizer:
         start_time = time.time()
 
         image = self.load_image()
-        print(f"Time to load image: {time.time() - start_time:.2f} seconds")
+        # Try flipping the image vertically
+        #image = cv2.flip(image, 0)
+        #print("Image flipped vertically")
 
         start_time = time.time()
         # Calculate intrinsic matrix and undistort image
@@ -291,18 +293,30 @@ class PointCloudColorizer:
 # Example usage
 if __name__ == "__main__":
     # Camera intrinsic parameters (rarely change)
-    focal_length = 3710.76702
+    #focal_length = 3710.76702
+    focal_length = 2978.46482
+    
     #cx = 0.0
     #cy = 0.0
     #cx = -6.66303
     #cy = 18.5645
-    cx = -6.66303 # these values are perfect
-    cy = -18.5645 # these values are perfect
-    k1 = -0.10661
-    k2 = 0.0011906
-    p1 = 0.000374906
-    p2 = -0.000107769
-    k3 = -0.0184579
+    #cx = -6.66303 # these values are perfect
+    #cy = -18.5645 # these values are perfect
+    #k1 = -0.10661
+    #k2 = 0.0011906
+    #p1 = 0.000374906
+    #2 = -0.000107769
+    #k3 = -0.0184579
+
+
+    cx = 0.0 # these values are perfect
+    cy = 0.0 # these values are perfect
+    k1 = -0.127207
+    k2 = 0.0713991
+    p1 = -0.0024243
+    p2 = 7.65418e-05
+    k3 = 0.0
+
 
     # Initialize the colorizer with intrinsic parameters
     colorizer = PointCloudColorizer(focal_length, cx, cy, k1, k2, p1, p2, k3)
@@ -314,19 +328,21 @@ if __name__ == "__main__":
     dx = 0.0
     dy = 0.0
     dz = 0.0
-    d_omega = 180.0
+    d_omega = 20.5
     d_phi = 0.0
     d_kappa = 0.0
 
     colorizer.set_tweak_inputs(dx, dy, dz, d_omega, d_phi, d_kappa)
 
     # Set main inputs (change frequently)
-    point_cloud_path = '..//SAMPLES//warehouse//E5837_SAMPLE_MGA2020Z50_NOCOLOR.laz'
+    #point_cloud_path = '..//SAMPLES//warehouse//E5837_SAMPLE_MGA2020Z50_NOCOLOR.laz'
+    point_cloud_path = '..//SAMPLES//building//building_pcloud_local_nocolor.laz'
 
     #image_path = 'DJI_20240823101350_0028_V.JPG'
     #image_path = '..//SAMPLES//warehouse//DJI_20240823101336_0017_V.JPG'
     #image_path = '..//SAMPLES//warehouse//DJI_20240823101401_0037_V.JPG'
-    image_path = '..//SAMPLES//warehouse//DJI_20240823101453_0073_V.JPG'
+    #image_path = '..//SAMPLES//warehouse//DJI_20240823101453_0073_V.JPG'
+    image_path = '..//SAMPLES//building//IMG_4310.JPG'
 
     # Camera extrinsic parameters
     #camera_position = np.array([325948.3123836849117652, 6257893.2384495604783297, 133.7553913284237410])
@@ -335,13 +351,15 @@ if __name__ == "__main__":
     #camera_orientation = np.array([0.0115005606266411, -0.9799490897375966, 152.4919562799930759])
     #camera_position = np.array([325973.2287490139133297, 6257861.2956544291228056, 133.6659689489411846])
     #camera_orientation = np.array([0.2434398815702497, -0.4687796779942965, -101.3514141233089276])
-    camera_position = np.array([326039.9911073350231163, 6257798.1666464824229479, 133.4982608371374511])
-    camera_orientation = np.array([39.0045855240841632, 23.3652423038848873, 25.7762691870272995])
+    #camera_position = np.array([326039.9911073350231163, 6257798.1666464824229479, 133.4982608371374511])
+    #camera_orientation = np.array([39.0045855240841632, 23.3652423038848873, 25.7762691870272995])
+    camera_position = np.array([11.3217892717263506, 10.4768326740610629, -8.1597962947665721])
+    camera_orientation = np.array([-99.9137241868528037, 39.1488434212446066, -173.9688624451934231])
 
 
     # set main inputs
     colorizer.set_main_inputs(point_cloud_path, image_path, camera_position, camera_orientation)
 
     # Run the colorization process
-    output_path = '..//SAMPLES//warehouse//colorized_point_cloud_0073.laz'
+    output_path = '..//SAMPLES//building//colorized_point_cloud_xxx.laz'
     colorizer.run(output_path)
